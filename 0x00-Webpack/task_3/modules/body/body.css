@@ -1,0 +1,11 @@
+button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+#count {
+    text-align: center;
+    font-weight: bold;
+}
