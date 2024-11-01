@@ -8,4 +8,6 @@ export function getFooterCopy(isIndex) {
 }
 
 
-
+export function getLatestNotification(){
+  return <div><strong>Urgent requirement</strong> - complete by EOD</div>
+}
