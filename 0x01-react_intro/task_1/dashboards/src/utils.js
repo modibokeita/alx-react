@@ -1,16 +1,11 @@
-import React from 'react'
 
-function GetFullYear() {
-
-  let date = new Date()
-
-   let year = date.getFullYear()
-  return (
-    <div>
-      <h1>{year}</h1>
-    </div>
-  )
+export function getFullYear() {
+  return new Date().getFullYear();
 }
 
-export default GetFullYear
+export function getFooterCopy(isIndex) {
+  return isIndex ? 'Holberton School' : 'Holberton School main dashboard';
+}
+
+
 
