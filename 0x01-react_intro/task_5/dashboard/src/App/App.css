@@ -1,0 +1,35 @@
+.App-header {
+  display: flex;
+  float: left;
+  width: 100%;
+  font-size: calc(10px + 2vmin);
+  border-bottom: 5px solid red;
+}
+
+.App-header h1{
+  padding: 100px;
+  color: red;
+
+}
+
+.App-body{
+  display: flex;
+  float: left;
+  padding: 50px;
+  font-size: 30px;
+  padding-bottom: 200px;
+}
+
+.App-footer{
+  display: flex;
+  flex-direction: column;
+  float: left;
+  width: 100%;
+  padding-top: 50px;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-style: italic;
+  border-top: 5px solid red;
+
+}
