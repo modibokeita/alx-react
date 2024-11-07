@@ -3,7 +3,6 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import {Notifications} from './Notifications';
 import NotificationItem from './NotificationItem';
-
 describe('Notifications Component', () => {
   it('renders without crashing', () => {
     shallow(<Notifications />);
@@ -21,3 +20,5 @@ describe('Notifications Component', () => {
     expect(firstItem.prop('value')).toBe('New course available');
   });
 });
+
+

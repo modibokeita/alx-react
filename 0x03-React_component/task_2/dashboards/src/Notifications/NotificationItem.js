@@ -1,25 +1,26 @@
 // src/Notifications/NotificationItem.js
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-function NotificationItem({ type, html, value }) {
-  return (
-    <li data-notification-type={type} dangerouslySetInnerHTML={html}>
-      {value}
-    </li>
-  );
+class NotificationItem extends Component {
+  render() {
+    const { id, text, markAsRead } = this.props;
+    return (
+      <li onClick={() => markAsRead(id)}>
+        {text}
+      </li>
+    );
+  }
 }
 
 NotificationItem.propTypes = {
-  type: PropTypes.string.isRequired,
-  html: PropTypes.shape({ __html: PropTypes.string }),
-  value: PropTypes.string,
+  id: PropTypes.number.isRequired,
+  text: PropTypes.string.isRequired,
+  markAsRead: PropTypes.func,
 };
 
 NotificationItem.defaultProps = {
-  type: 'default',
-  html: null,
-  value: '',
+  markAsRead: () => {},
 };
 
 export default NotificationItem;

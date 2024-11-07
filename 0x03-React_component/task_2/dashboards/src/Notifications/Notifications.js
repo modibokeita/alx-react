@@ -1,19 +1,50 @@
-// src/Notifications/Notifications.js
-import React from 'react';
-import NotificationItem from './NotificationItem';
 
-function Notifications() {
-  return (
-    <div className="Notifications">
-      <p>Here is the list of notifications</p>
-      <ul>
-        <NotificationItem type="default" value="New course available" />
-        <NotificationItem type="urgent" value="New resume available" />
-        <NotificationItem type="urgent" html={{ __html: '<strong>Urgent requirement</strong> - complete by EOD' }} />
-      </ul>
-    </div>
-  );
+import NotificationItem from './NotificationItem';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import "./Notifications.css";
+
+class Notifications extends Component {
+  constructor(props) {
+    super(props);
+    this.markAsRead = this.markAsRead.bind(this);
+  }
+
+  markAsRead(id) {
+    console.log(`Notification ${id} has been marked as read`);
+  }
+
+  render() {
+    return (
+      <div className="Notifications">
+        <h1>Note</h1>
+        {/* Assuming NotificationItem is a component that takes id and markAsRead as props */}
+        {this.props.notifications.map((notification) => (
+          <NotificationItem
+            key={notification.id}
+            id={notification.id}
+            text={notification.text}
+            markAsRead={this.markAsRead}
+          />
+        ))}
+      </div>
+    );
+  }
 }
 
+Notifications.propTypes = {
+  notifications: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      text: PropTypes.string.isRequired,
+    })
+  ),
+};
+
+Notifications.defaultProps = {
+  notifications: [],
+};
+
 export default Notifications;
+
 
