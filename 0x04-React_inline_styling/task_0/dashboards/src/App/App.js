@@ -5,6 +5,7 @@ import Notifications from '../Notifications/Notifications';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import Login from '../Login/Login';
+import CourseList from '../CourseList/CourseList';
 
 function App() {
   return (
@@ -14,6 +15,9 @@ function App() {
         <Header />
         <div className="App-body">
           <Login />
+        </div>
+        <div className="courseList">
+          <CourseList />
         </div>
         <Footer />
       </div>
