@@ -16,7 +16,7 @@ class Notifications extends React.Component {
 
     return (
       <div className="Notifications">
-        <h1>Note</h1>
+        <h1>Your Notifications</h1>
         <ul>
           {listNotifications.map((notification, index) => (
             <li key={index}>{notification}</li>
