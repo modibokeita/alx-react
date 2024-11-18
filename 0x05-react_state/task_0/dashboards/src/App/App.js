@@ -1,5 +1,5 @@
 // src/App/App.js
-import React from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import Notifications from '../Notifications/Notifications';
 import Header from '../Header/Header';
@@ -7,22 +7,51 @@ import Footer from '../Footer/Footer';
 import Login from '../Login/Login';
 import CourseList from '../CourseList/CourseList';
 
-function App() {
-  return (
-    <>
-      <Notifications />
-      <div className={css(styles.app)}>
-        <Header />
-        <div className={css(styles.body)}>
-          <Login />
+class App extends Component {
+  constructor(props) {
+    super(props);
+    // Initialize state
+    this.state = {
+      displayDrawer: false,
+    };
+
+    // Bind methods
+    this.handleDisplayDrawer = this.handleDisplayDrawer.bind(this);
+    this.handleHideDrawer = this.handleHideDrawer.bind(this);
+  }
+
+  // Method to show the drawer
+  handleDisplayDrawer() {
+    this.setState({ displayDrawer: true });
+  }
+
+  // Method to hide the drawer
+  handleHideDrawer() {
+    this.setState({ displayDrawer: false });
+  }
+
+  render() {
+    const { displayDrawer } = this.state;
+
+    return (
+      <>
+        <Notifications
+          displayDrawer={displayDrawer}
+          handleHideDrawer={this.handleHideDrawer}
+        />
+        <div className={css(styles.app)}>
+          <Header />
+          <div className={css(styles.body)}>
+            <Login />
+          </div>
+          <div className={css(styles.courseList)}>
+            <CourseList />
+          </div>
+          <Footer className={css(styles.footer)} />
         </div>
-        <div className={css(styles.courseList)}>
-          <CourseList />
-        </div>
-        <Footer className={css(styles.footer)} />
-      </div>
-    </>
-  );
+      </>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
