@@ -1,15 +1,33 @@
-// src/Header/Header.js
-import React from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import logo from '../logo-holberton.jpg';
+import { AppContext } from '../App/AppContext'; // Import the AppContext
 
-function Header() {
-  return (
-    <div className={css(styles.header)}>
-      <img src={logo} alt="holberton logo" className={css(styles.logo)} />
-      <h1 className={css(styles.title)}>School dashboard</h1>
-    </div>
-  );
+class Header extends Component {
+  static contextType = AppContext; // Use ContextType API to inherit context
+
+  render() {
+    const { user, logOut } = this.context; // Access user and logOut from context
+
+    return (
+      <div className={css(styles.header)}>
+        <img src={logo} alt="holberton logo" className={css(styles.logo)} />
+        <h1 className={css(styles.title)}>School dashboard</h1>
+
+        {/* Conditionally render the welcome section when the user is logged in */}
+        {user.isLoggedIn && (
+          <section id="logoutSection" className={css(styles.logoutSection)}>
+            <span>Welcome {user.email}</span>
+            <button
+              className={css(styles.logoutButton)}
+              onClick={logOut}>
+              logout
+            </button>
+          </section>
+        )}
+      </div>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -27,6 +45,22 @@ const styles = StyleSheet.create({
     padding: '100px',
     color: 'red',
     margin: 0,
+  },
+  logoutSection: {
+    marginTop: '10px',
+    padding: '10px',
+    backgroundColor: '#f1f1f1',
+    borderRadius: '5px',
+    textAlign: 'center',
+  },
+  logoutButton: {
+    padding: '5px 10px',
+    backgroundColor: '#1976d2',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    marginLeft: '10px',
   },
 });
 
