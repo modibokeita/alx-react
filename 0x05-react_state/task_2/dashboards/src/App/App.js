@@ -1,30 +1,28 @@
 import React, { Component } from 'react';
 import { StyleSheet, css } from 'aphrodite';
+import { AppContext } from './AppContext'; // Import the AppContext
 import Notifications from '../Notifications/Notifications';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import Login from '../Login/Login';
 import CourseList from '../CourseList/CourseList';
-import AppContext from './AppContext';
 
 class App extends Component {
   constructor(props) {
     super(props);
 
-    // Local state
     this.state = {
       user: {
         email: '',
         password: '',
         isLoggedIn: false,
       },
-      logOut: this.logOut,
     };
 
     this.logIn = this.logIn.bind(this);
+    this.logOut = this.logOut.bind(this);
   }
 
-  // logIn function
   logIn(email, password) {
     this.setState({
       user: {
@@ -35,8 +33,7 @@ class App extends Component {
     });
   }
 
-  // logOut function
-  logOut = () => {
+  logOut() {
     this.setState({
       user: {
         email: '',
@@ -44,23 +41,21 @@ class App extends Component {
         isLoggedIn: false,
       },
     });
-  };
+  }
 
   render() {
-    const { user, logOut } = this.state;
+    const { user } = this.state;
 
     return (
-      <AppContext.Provider value={{ user, logOut }}>
-        <>
-          <Notifications />
-          <div className={css(styles.app)}>
-            <Header />
-            <div className={css(styles.body)}>
-              {user.isLoggedIn ? <CourseList /> : <Login logIn={this.logIn} />}
-            </div>
-            <Footer className={css(styles.footer)} />
+      <AppContext.Provider value={{ user, logOut: this.logOut }}>
+        <Notifications />
+        <div className={css(styles.app)}>
+          <Header />
+          <div className={css(styles.body)}>
+            {!user.isLoggedIn ? <Login logIn={this.logIn} /> : <CourseList />}
           </div>
-        </>
+          <Footer className={css(styles.footer)} />
+        </div>
       </AppContext.Provider>
     );
   }
