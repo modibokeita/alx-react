@@ -1,5 +1,4 @@
-// src/App/App.js
-import React from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import Notifications from '../Notifications/Notifications';
 import Header from '../Header/Header';
@@ -7,22 +6,47 @@ import Footer from '../Footer/Footer';
 import Login from '../Login/Login';
 import CourseList from '../CourseList/CourseList';
 
-function App() {
-  return (
-    <>
-      <Notifications />
-      <div className={css(styles.app)}>
-        <Header />
-        <div className={css(styles.body)}>
-          <Login />
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      listNotifications: [
+        { id: 1, type: 'default', value: 'New course available' },
+        { id: 2, type: 'urgent', value: 'Course deadline approaching' },
+        { id: 3, type: 'default', value: 'Your account was updated' },
+      ],
+    };
+  }
+
+  // Function to mark a notification as read
+  markNotificationAsRead = (id) => {
+    this.setState(prevState => ({
+      listNotifications: prevState.listNotifications.filter(notification => notification.id !== id),
+    }));
+  }
+
+  render() {
+    const { listNotifications } = this.state;
+
+    return (
+      <>
+        <Notifications
+          listNotifications={listNotifications}
+          markNotificationAsRead={this.markNotificationAsRead}
+        />
+        <div className={css(styles.app)}>
+          <Header />
+          <div className={css(styles.body)}>
+            <Login />
+          </div>
+          <div className={css(styles.courseList)}>
+            <CourseList />
+          </div>
+          <Footer className={css(styles.footer)} />
         </div>
-        <div className={css(styles.courseList)}>
-          <CourseList />
-        </div>
-        <Footer className={css(styles.footer)} />
-      </div>
-    </>
-  );
+      </>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
