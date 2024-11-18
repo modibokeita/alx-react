@@ -1,19 +1,10 @@
-// src/Notifications/Notifications.js
-import React from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types'; // Import PropTypes for type checking
 import { StyleSheet, css } from 'aphrodite';
 
-class Notifications extends React.Component {
-  // Implement shouldComponentUpdate to optimize performance
-  shouldComponentUpdate(nextProps) {
-    // Only re-render if the length of the listNotifications has increased
-    return (
-      nextProps.listNotifications &&
-      nextProps.listNotifications.length > (this.props.listNotifications?.length || 0)
-    );
-  }
-
+class Notifications extends PureComponent {
   render() {
-    const { listNotifications = [], isOpen = false } = this.props; // Default to empty array if undefined
+    const { listNotifications = [], isOpen = false, markNotificationAsRead } = this.props; // Default to empty array if undefined
 
     return (
       <div className={css(isOpen ? styles.notificationsOpen : styles.notifications)}>
@@ -21,7 +12,10 @@ class Notifications extends React.Component {
         <ul className={css(styles.list)}>
           {listNotifications.map((notification, index) => (
             <li key={index} className={css(styles.listItem)}>
-              {notification}
+              <span>{notification.value}</span>
+              <button onClick={() => markNotificationAsRead(notification.id)}>
+                Mark as Read
+              </button>
             </li>
           ))}
         </ul>
@@ -29,6 +23,25 @@ class Notifications extends React.Component {
     );
   }
 }
+
+// Define PropTypes for this component
+Notifications.propTypes = {
+  listNotifications: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      value: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+    })
+  ),
+  isOpen: PropTypes.bool,
+  markNotificationAsRead: PropTypes.func.isRequired, // markNotificationAsRead should be a function
+};
+
+// Set default values for props
+Notifications.defaultProps = {
+  listNotifications: [],
+  isOpen: false,
+};
 
 const styles = StyleSheet.create({
   notifications: {
