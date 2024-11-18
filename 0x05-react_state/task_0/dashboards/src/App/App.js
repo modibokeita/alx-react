@@ -35,8 +35,10 @@ class App extends Component {
 
     return (
       <>
+        {/* Pass state and handlers as props */}
         <Notifications
           displayDrawer={displayDrawer}
+          handleDisplayDrawer={this.handleDisplayDrawer}
           handleHideDrawer={this.handleHideDrawer}
         />
         <div className={css(styles.app)}>
