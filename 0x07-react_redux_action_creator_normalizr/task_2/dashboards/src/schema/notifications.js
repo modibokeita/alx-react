@@ -17,6 +17,16 @@ const notification = new schema.Entity('notifications', {
 // Normalize the notifications data
 export const normalizedData = normalize(notificationsData.default, [notification]);
 
-// Export entities for testing
-export { user, message, notification };
+/**
+ * Get all notifications for a specific user by ID.
+ * @param {string} userId - The ID of the user.
+ * @returns {Array} List of notifications for the user.
+ */
+export const getAllNotificationsByUser = (userId) => {
+  const notifications = normalizedData.entities.notifications || {};
+  const messages = normalizedData.entities.messages || {};
 
+  return Object.values(notifications)
+    .filter((notif) => notif.author === userId)
+    .map((notif) => messages[notif.context]);
+};
