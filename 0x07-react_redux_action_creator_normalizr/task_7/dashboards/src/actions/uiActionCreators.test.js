@@ -1,41 +1,49 @@
-// src/actions/uiActionCreators.test.js
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import fetchMock from 'fetch-mock';
 
-import {
-    login,
-    logout,
-    displayNotificationDrawer,
-    hideNotificationDrawer,
-  } from './uiActionCreators';
-  import {
-    LOGIN,
-    LOGOUT,
-    DISPLAY_NOTIFICATION_DRAWER,
-    HIDE_NOTIFICATION_DRAWER,
-  } from './uiActionTypes';
+import { loginRequest, loginSuccess, loginFailure } from './uiActionCreators';
+import { LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE } from './uiActionTypes';
 
-  describe('UI Action Creators', () => {
-    it('should create an action for login', () => {
-      const email = 'test@example.com';
-      const password = 'password123';
-      const expectedAction = {
-        type: LOGIN,
-        user: { email, password },
-      };
-      expect(login(email, password)).toEqual(expectedAction);
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
+
+describe('uiActionCreators', () => {
+  afterEach(() => {
+    fetchMock.restore();
+  });
+
+  it('dispatches LOGIN and LOGIN_SUCCESS on successful API response', () => {
+    const store = mockStore({});
+    const user = { id: 1, name: 'John Doe', email: 'john.doe@example.com' };
+
+    fetchMock.getOnce('/dist/login-success.json', {
+      body: { user },
+      headers: { 'content-type': 'application/json' },
     });
 
-    it('should create an action for logout', () => {
-      const expectedAction = { type: LOGOUT };
-      expect(logout()).toEqual(expectedAction);
-    });
+    const expectedActions = [
+      { type: LOGIN, user: { email: 'test@example.com', password: 'password' } },
+      { type: LOGIN_SUCCESS, user },
+    ];
 
-    it('should create an action to display the notification drawer', () => {
-      const expectedAction = { type: DISPLAY_NOTIFICATION_DRAWER };
-      expect(displayNotificationDrawer()).toEqual(expectedAction);
-    });
-
-    it('should create an action to hide the notification drawer', () => {
-      const expectedAction = { type: HIDE_NOTIFICATION_DRAWER };
-      expect(hideNotificationDrawer()).toEqual(expectedAction);
+    return store.dispatch(loginRequest('test@example.com', 'password')).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
+  it('dispatches LOGIN and LOGIN_FAILURE on API failure', () => {
+    const store = mockStore({});
+
+    fetchMock.getOnce('/dist/login-success.json', 500);
+
+    const expectedActions = [
+      { type: LOGIN, user: { email: 'test@example.com', password: 'password' } },
+      { type: LOGIN_FAILURE },
+    ];
+
+    return store.dispatch(loginRequest('test@example.com', 'password')).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+});

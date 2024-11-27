@@ -1,53 +1,40 @@
-import { bindActionCreators } from 'redux';
-import {
-  LOGIN,
-  LOGOUT,
-  DISPLAY_NOTIFICATION_DRAWER,
-  HIDE_NOTIFICATION_DRAWER,
-} from './uiActionTypes';
+import { LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE } from './uiActionTypes';
 
 /**
- * Action creator for login.
- * @param {string} email - User's email.
- * @param {string} password - User's password.
+ * Action creator for login success.
+ * @param {object} user - The user object.
  * @returns {object} - The action object.
  */
-export const login = (email, password) => ({
-  type: LOGIN,
-  user: { email, password },
+export const loginSuccess = (user) => ({
+  type: LOGIN_SUCCESS,
+  user,
 });
 
 /**
- * Action creator for logout.
+ * Action creator for login failure.
  * @returns {object} - The action object.
  */
-export const logout = () => ({
-  type: LOGOUT,
+export const loginFailure = () => ({
+  type: LOGIN_FAILURE,
 });
 
 /**
- * Action creator for displaying notification drawer.
- * @returns {object} - The action object.
+ * Async action creator for login request.
+ * @param {string} email - User email.
+ * @param {string} password - User password.
+ * @returns {function} - A thunk function.
  */
-export const displayNotificationDrawer = () => ({
-  type: DISPLAY_NOTIFICATION_DRAWER,
-});
+export const loginRequest = (email, password) => {
+  return async (dispatch) => {
+    dispatch({ type: LOGIN, user: { email, password } });
 
-/**
- * Action creator for hiding notification drawer.
- * @returns {object} - The action object.
- */
-export const hideNotificationDrawer = () => ({
-  type: HIDE_NOTIFICATION_DRAWER,
-});
-
-/**
- * Bound UI action creators.
- * @param {function} dispatch - Redux dispatch function.
- * @returns {object} - Object containing bound UI action creators.
- */
-export const boundUIActionCreators = (dispatch) =>
-  bindActionCreators(
-    { login, logout, displayNotificationDrawer, hideNotificationDrawer },
-    dispatch
-  );
+    try {
+      const response = await fetch('/dist/login-success.json');
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
+      dispatch(loginSuccess(data.user));
+    } catch (error) {
+      dispatch(loginFailure());
+    }
+  };
+};
