@@ -1,30 +1,17 @@
-// src/App/App.test.js
-import React from 'react';
-import { shallow } from 'enzyme';
-import App from './App';
+import { mapStateToProps } from './App';
+import { fromJS } from 'immutable';
 
-describe('<App />', () => {
-  it('renders without crashing', () => {
-    const wrapper = shallow(<App />);
-    expect(wrapper.exists()).toBe(true);
-  });
+describe('mapStateToProps', () => {
+  it('should return the correct object from the state', () => {
+    // Create a mock state using Immutable.js
+    const state = fromJS({
+      isUserLoggedIn: true,
+    });
 
-  it('default state for displayDrawer is false', () => {
-    const wrapper = shallow(<App />);
-    expect(wrapper.state('displayDrawer')).toBe(false);
-  });
+    // Call mapStateToProps with the mock state
+    const result = mapStateToProps(state);
 
-  it('handleDisplayDrawer sets displayDrawer to true', () => {
-    const wrapper = shallow(<App />);
-    wrapper.instance().handleDisplayDrawer();
-    expect(wrapper.state('displayDrawer')).toBe(true);
-  });
-
-  it('handleHideDrawer sets displayDrawer to false', () => {
-    const wrapper = shallow(<App />);
-    wrapper.instance().handleDisplayDrawer(); // First set it to true
-    expect(wrapper.state('displayDrawer')).toBe(true); // Confirm it was set
-    wrapper.instance().handleHideDrawer(); // Then set it to false
-    expect(wrapper.state('displayDrawer')).toBe(false);
+    // Assert the result
+    expect(result).toEqual({ isLoggedIn: true });
   });
 });
