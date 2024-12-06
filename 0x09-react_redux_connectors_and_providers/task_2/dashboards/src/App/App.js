@@ -1,82 +1,54 @@
-// src/App/App.js
-import React, { Component } from 'react';
-import { StyleSheet, css } from 'aphrodite';
-import Notifications from '../Notifications/Notifications';
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
-import Login from '../Login/Login';
-import CourseList from '../CourseList/CourseList';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { loginRequest } from '../actions/authActions';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    // Initialize state
-    this.state = {
-      displayDrawer: false,
-    };
-
-    // Bind methods
-    this.handleDisplayDrawer = this.handleDisplayDrawer.bind(this);
-    this.handleHideDrawer = this.handleHideDrawer.bind(this);
-  }
-
-  // Method to show the drawer
-  handleDisplayDrawer() {
-    this.setState({ displayDrawer: true });
-  }
-
-  // Method to hide the drawer
-  handleHideDrawer() {
-    this.setState({ displayDrawer: false });
-  }
+class App extends React.Component {
+  handleLogin = (email, password) => {
+    const { login } = this.props; // Access login from props
+    login(email, password); // Call the action creator
+  };
 
   render() {
-    const { displayDrawer } = this.state;
+    const { isLoggedIn, displayDrawer } = this.props;
 
     return (
-      <>
-        {/* Pass state and handlers as props */}
-        <Notifications
-          displayDrawer={displayDrawer}
-          handleDisplayDrawer={this.handleDisplayDrawer}
-          handleHideDrawer={this.handleHideDrawer}
-        />
-        <div className={css(styles.app)}>
-          <Header />
-          <div className={css(styles.body)}>
-            <Login />
-          </div>
-          <div className={css(styles.courseList)}>
-            <CourseList />
-          </div>
-          <Footer className={css(styles.footer)} />
-        </div>
-      </>
+      <div>
+        <h1>Welcome to the Dashboard</h1>
+        {isLoggedIn ? (
+          <p>You are logged in</p>
+        ) : (
+          <button onClick={() => this.handleLogin('user@example.com', 'password')}>
+            Log In
+          </button>
+        )}
+        {displayDrawer && <p>Notification Drawer is visible</p>}
+      </div>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  app: {
-    fontFamily: 'Arial, sans-serif',
-    textAlign: 'center',
-  },
-  body: {
-    padding: '20px',
-    minHeight: '60vh',
-  },
-  footer: {
-    borderTop: '1px solid #ccc',
-    padding: '10px',
-    position: 'fixed',
-    bottom: '0',
-    width: '100%',
-    textAlign: 'center',
-    backgroundColor: '#f5f5f5',
-  },
-  courseList: {
-    marginTop: '20px',
-  },
+App.propTypes = {
+  isLoggedIn: PropTypes.bool,
+  displayDrawer: PropTypes.bool,
+  login: PropTypes.func.isRequired,
+};
+
+App.defaultProps = {
+  isLoggedIn: false,
+  displayDrawer: false,
+};
+
+// Map state to props
+const mapStateToProps = (state) => ({
+  isLoggedIn: state.get('isUserLoggedIn'),
+  displayDrawer: state.get('isNotificationDrawerVisible'),
 });
 
-export default App;
+// Map dispatch to props
+const mapDispatchToProps = {
+  login: loginRequest, // Connect loginRequest to the login prop
+};
+
+// Connect component to Redux store
+export default connect(mapStateToProps, mapDispatchToProps)(App);
