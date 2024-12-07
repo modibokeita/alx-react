@@ -1,26 +1,38 @@
-import { Map } from 'immutable';
-import { SET_LOADING_STATE, FETCH_NOTIFICATIONS_SUCCESS } from '../actions/notificationActionCreators';
+// src/Notifications/Notifications.js
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { getUnreadNotificationsByType } from '../selectors/notificationSelector';
+import { setNotificationFilter } from '../actions/notificationActionCreators';
 
-const initialState = Map({
-  notifications: Map(),
-  loading: false,
+class Notifications extends Component {
+  render() {
+    const { notifications, setNotificationFilter } = this.props;
+
+    return (
+      <div>
+        <h2>Here is the list of notifications</h2>
+        <div>
+          <button onClick={() => setNotificationFilter('urgent')}>‼️</button>
+          <button onClick={() => setNotificationFilter('default')}>💠</button>
+        </div>
+        <ul>
+          {notifications.map((notification) => (
+            <li key={notification.id}>{notification.message}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+}
+
+// Map state to props using the memoized selector
+const mapStateToProps = (state) => ({
+  notifications: getUnreadNotificationsByType(state),
 });
 
-const notificationReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case SET_LOADING_STATE:
-      return state.set('loading', action.payload);
-
-    case FETCH_NOTIFICATIONS_SUCCESS:
-      // Merging new notifications with existing notifications using `mergeDeep`
-      return state.set(
-        'notifications',
-        state.get('notifications').mergeDeep(Map(action.payload))
-      );
-
-    default:
-      return state;
-  }
+// Map dispatch to props
+const mapDispatchToProps = {
+  setNotificationFilter,
 };
 
-export default notificationReducer;
+export default connect(mapStateToProps, mapDispatchToProps)(Notifications);
