@@ -1,22 +1,53 @@
 // src/CourseList/CourseList.js
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { fetchCourses, selectCourse, unSelectCourse } from '../actions/courseActionCreators';
+import { getListCourses } from '../selectors/courseSelector';
 import CourseListRow from './CourseListRow';
 
+class CourseList extends Component {
+  componentDidMount() {
+    // Fetch courses when the component mounts
+    this.props.fetchCourses();
+  }
 
-const CourseList = () => {
+  onChangeRow = (id, checked) => {
+    if (checked) {
+      this.props.selectCourse(id);
+    } else {
+      this.props.unSelectCourse(id);
+    }
+  };
+
+  render() {
+    const { courses } = this.props;
+
     return (
-        <table id="CourseList">
-            <thead>
-                <CourseListRow isHeader textFirstCell="Available courses" />
-                <CourseListRow isHeader textFirstCell="Course name" textSecondCell="Credit" />
-            </thead>
-            <tbody>
-                <CourseListRow textFirstCell="ES6" textSecondCell="60" />
-                <CourseListRow textFirstCell="Webpack" textSecondCell="20" />
-                <CourseListRow textFirstCell="React" textSecondCell="40" />
-            </tbody>
-        </table>
+      <div>
+        <h2>Course List</h2>
+        <ul>
+          {courses.map((course) => (
+            <CourseListRow
+              key={course.id}
+              course={course}
+              isChecked={course.isSelected}
+              onChangeRow={this.onChangeRow}
+            />
+          ))}
+        </ul>
+      </div>
     );
+  }
+}
+
+const mapStateToProps = (state) => ({
+  courses: getListCourses(state),
+});
+
+const mapDispatchToProps = {
+  fetchCourses,
+  selectCourse,
+  unSelectCourse,
 };
 
-export default CourseList;
+export default connect(mapStateToProps, mapDispatchToProps)(CourseList);
