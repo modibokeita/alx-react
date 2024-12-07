@@ -1,30 +1,31 @@
-// src/App/App.test.js
 import React from 'react';
 import { shallow } from 'enzyme';
-import App from './App';
+import App, { mapStateToProps } from './App';
+import { fromJS } from 'immutable';
 
-describe('<App />', () => {
-  it('renders without crashing', () => {
+// Mock state for testing
+const state = fromJS({
+  courses: {},
+  notifications: {},
+  ui: {
+    user: null,
+    isNotificationDrawerVisible: false,
+  },
+});
+
+describe('App component', () => {
+  it('should map state to props correctly', () => {
+    const expectedProps = {
+      isLoggedIn: false,
+      displayDrawer: false,
+    };
+    expect(mapStateToProps(state)).toEqual(expectedProps);
+  });
+
+  it('should render without crashing', () => {
     const wrapper = shallow(<App />);
     expect(wrapper.exists()).toBe(true);
   });
 
-  it('default state for displayDrawer is false', () => {
-    const wrapper = shallow(<App />);
-    expect(wrapper.state('displayDrawer')).toBe(false);
-  });
-
-  it('handleDisplayDrawer sets displayDrawer to true', () => {
-    const wrapper = shallow(<App />);
-    wrapper.instance().handleDisplayDrawer();
-    expect(wrapper.state('displayDrawer')).toBe(true);
-  });
-
-  it('handleHideDrawer sets displayDrawer to false', () => {
-    const wrapper = shallow(<App />);
-    wrapper.instance().handleDisplayDrawer(); // First set it to true
-    expect(wrapper.state('displayDrawer')).toBe(true); // Confirm it was set
-    wrapper.instance().handleHideDrawer(); // Then set it to false
-    expect(wrapper.state('displayDrawer')).toBe(false);
-  });
+  // Additional tests as needed
 });
